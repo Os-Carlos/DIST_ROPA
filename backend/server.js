@@ -7,7 +7,9 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 var corsOptions = {
-    origin: "localhost:3000"
+    origin: [
+        "http://localhost:3000"
+    ]
 };
 
 app.use(cors(corsOptions));
@@ -23,7 +25,7 @@ db.sequelize.sync()
     });
 
 app.get("/", (req, res) => {
-    res.json({ message: "Kiwi" });
+    res.json({ message: "API Desarrollo Web" });
 });
 require("./app/routes/cliente.routes")(app);
 require("./app/routes/compra_detalle.routes")(app);
