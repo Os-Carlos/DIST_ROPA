@@ -6,7 +6,10 @@ const Op = db.Sequelize.Op;
 exports.create = (req, res) => {
     const telefono = {
         numero: req.body.numero,
-        id_entidad: req.body.id_entidad,
+        id_cliente: req.body.id_cliente || null,
+        id_empleado: req.body.id_empleado || null,
+        id_proveedor: req.body.id_proveedor || null,
+        id_sucursal: req.body.id_sucursal || null,
         extension: req.body.extension
     }
 
@@ -33,6 +36,8 @@ exports.findAll = (req, res) => {
             });
         });
 };
+
+
 
 //put
 exports.update = (req, res) => {

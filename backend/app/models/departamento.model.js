@@ -10,6 +10,8 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false
         }
     }, {
+        timestamps: false
+    }, {
         tableName: 'departamentos'
     })
     return Departamento;

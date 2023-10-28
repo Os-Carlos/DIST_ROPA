@@ -16,6 +16,7 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// db.sequelize.sync({ force: true })
 db.sequelize.sync()
     .then(() => {
         console.log("------Base de datos sincronizada");
@@ -31,7 +32,7 @@ require("./app/routes/cliente.routes")(app);
 require("./app/routes/compra_detalle.routes")(app);
 require("./app/routes/compra.routes")(app);
 require("./app/routes/departamento.routes")(app);
-require("./app/routes/direccion.routes")(app);
+// require("./app/routes/direccion.routes")(app);
 require("./app/routes/empleado.routes")(app);
 require("./app/routes/factura_detalle.routes")(app);
 require("./app/routes/factura.routes")(app);
@@ -41,8 +42,8 @@ require("./app/routes/pedido.routes")(app);
 require("./app/routes/producto.routes")(app);
 require("./app/routes/proveedor.routes")(app);
 require("./app/routes/sucursal.routes")(app);
-require("./app/routes/telefono.routes")(app);
-require("./app/routes/usuario.routes")(app);
+// require("./app/routes/telefono.routes")(app);
+// require("./app/routes/usuario.routes")(app);
 
 app.listen(PORT, () => {
     console.log(`------Servidor corriendo en puerto: ${PORT}.`);

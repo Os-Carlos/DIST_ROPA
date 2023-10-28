@@ -9,9 +9,17 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             primaryKey: true
         },
-        id_entidad: {
-            type: Sequelize.INTEGER,
-            allowNull: false
+        id_cliente: {
+            type: Sequelize.INTEGER
+        },
+        id_empleado: {
+            type: Sequelize.INTEGER
+        },
+        id_proveedor: {
+            type: Sequelize.INTEGER
+        },
+        id_sucursal: {
+            type: Sequelize.INTEGER
         },
         extension: {
             type: Sequelize.STRING

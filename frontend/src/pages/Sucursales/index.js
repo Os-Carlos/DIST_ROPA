@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input } from 'antd';
+import { Table, Button, Modal, Form, Input, Typography } from 'antd';
 import axios from 'axios';
-import { DeleteFilled, EditFilled } from '@ant-design/icons'
+import { DeleteFilled, EditFilled, PlusOutlined } from '@ant-design/icons'
 
-const Proveedores = () => {
-    const apiUrl = 'http://localhost:4000/proveedores/';
+const Sucursales = () => {
+    const apiUrl = 'http://localhost:4000/sucursales/';
     const [data, setData] = useState([]);
     const [selectedRow, setSelectedRow] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
@@ -52,10 +52,10 @@ const Proveedores = () => {
         setModalVisible(true);
     };
     const handleSave = (editedData) => {
-        axios.put(apiUrl + editedData.id_proveedor, editedData)
+        axios.put(apiUrl + editedData.id_sucursal, editedData)
             .then(() => {
                 const updatedData = data.map(item =>
-                    item.id_proveedor === editedData.id_proveedor ? editedData : item
+                    item.id_sucursal === editedData.id_sucursal ? editedData : item
                 );
                 setData(updatedData);
                 setModalVisible(false);
@@ -77,10 +77,10 @@ const Proveedores = () => {
 
         // Eliminar el registro
         if (deletingRecord) {
-            axios.delete(apiUrl + deletingRecord.id_proveedor)
+            axios.delete(apiUrl + deletingRecord.id_sucursal)
                 .then(() => {
                     // Actualizar la lista de datos después de eliminar el registro
-                    setData(data.filter(item => item.id_proveedor !== deletingRecord.id_proveedor));
+                    setData(data.filter(item => item.id_sucursal !== deletingRecord.id_sucursal));
                 })
                 .catch(error => {
                     console.error('Error al eliminar el registro:', error);
@@ -93,12 +93,11 @@ const Proveedores = () => {
         setDeletingRecord(null);
     }
 
-    //columnas de la taabla
+    //columnas de la tabla
     const columns = [
-        //{ title: 'ID Proveedor', dataIndex: 'id_proveedor', key: 'id_proveedor', },
-        { title: 'RUT', dataIndex: 'rut', key: 'rut', },
+        // { title: 'ID Sucursal', dataIndex: 'id_sucursal', key: 'id_sucursal', },        
         { title: 'Nombre', dataIndex: 'nombre', key: 'nombre', },
-        { title: 'Contacto', dataIndex: 'contacto', key: 'contacto', },
+        { title: 'Horario', dataIndex: 'horario', key: 'horario', },
         {
             title: 'Acciones',
             key: 'acciones',
@@ -106,11 +105,11 @@ const Proveedores = () => {
                 <div>
                     <EditFilled
                         onClick={() => handleEdit(record)}
-                        style={{ fontSize: "20px", color: "orange" }}
+                        style={{ fontSize: "20px", color: "#e67700" }}
                     />
                     <DeleteFilled
                         onClick={() => showDeleteConfirm(record)}
-                        style={{ fontSize: "20px", color: "red", marginLeft: "20px" }}
+                        style={{ fontSize: "20px", color: "#dc3545", marginLeft: "20px" }}
                     />
                 </div>
             ),
@@ -120,36 +119,41 @@ const Proveedores = () => {
     //componente principal
     return (
         <div className='div-table'>
-            <Button type="primary" onClick={handleCreate} style={{ marginBottom: "20px" }}>Agregar Proveedor</Button>
-
+            <div className='table-elemnts'>
+                <Typography style={{ fontSize: "25px" }}>Sucursales</Typography>
+                <Button type="primary" onClick={handleCreate} style={{ paddingTop: 5 }}><PlusOutlined style={{ fontSize: "20px", margin: 0 }} /></Button>
+            </div>
             <Table
                 dataSource={data}
                 columns={columns}
-                rowKey="id_proveedor"
+                rowKey="id_sucursal"
                 pagination={false}
             />
 
             <Modal
-                title="Editar Proveedor"
+                title="Editar Sucursal"
                 open={modalVisible}
                 onOk={() => handleSave(selectedRow)}
                 onCancel={() => setModalVisible(false)}
             >
-                <Form initialValues={selectedRow}>
+                <Form
+                    initialValues={selectedRow}
+                    layout='vertical'
+                >
                     <Form.Item name="rut" label="Rut">
                         <Input value={selectedRow?.rut} onChange={e => setSelectedRow({ ...selectedRow, rut: e.target.value })} />
                     </Form.Item>
                     <Form.Item name="nombre" label="Nombre">
                         <Input value={selectedRow?.nombre} onChange={e => setSelectedRow({ ...selectedRow, nombre: e.target.value })} />
                     </Form.Item>
-                    <Form.Item name="contacto" label="Contacto">
-                        <Input value={selectedRow?.contacto} onChange={e => setSelectedRow({ ...selectedRow, contacto: e.target.value })} />
+                    <Form.Item name="horario" label="Horario">
+                        <Input value={selectedRow?.horario} onChange={e => setSelectedRow({ ...selectedRow, horario: e.target.value })} />
                     </Form.Item>
                 </Form>
             </Modal>
 
             <Modal
-                title="Agregar Proveedor"
+                title="Agregar Sucursal"
                 open={createModalVisible}
                 onOk={handleCreateSubmit}
                 onCancel={() => {
@@ -157,14 +161,14 @@ const Proveedores = () => {
                     setCreateModalVisible(false);
                 }}
             >
-                <Form form={createForm}>
+                <Form form={createForm} requiredMark={false} layout='vertical'>
                     <Form.Item
                         name="rut"
                         label="RUT"
                         rules={[
                             {
                                 required: true,
-                                message: 'Por favor ingresa el RUT del proveedor',
+                                message: 'Por favor ingresa el RUT del cliente',
                             },
                         ]}
                     >
@@ -176,21 +180,15 @@ const Proveedores = () => {
                         rules={[
                             {
                                 required: true,
-                                message: 'Por favor ingresa el nombre del proveedor',
+                                message: 'Por favor ingresa el nombre del cliente',
                             },
                         ]}
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name="contacto"
-                        label="Contacto"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Por favor ingresa el contacto del proveedor',
-                            },
-                        ]}
+                        name="horario"
+                        label="Horario"
                     >
                         <Input />
                     </Form.Item>
@@ -209,4 +207,4 @@ const Proveedores = () => {
     );
 };
 
-export default Proveedores;
+export default Sucursales;

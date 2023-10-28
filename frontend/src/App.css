@@ -8,10 +8,12 @@
 .AppHeader {
   height: 50px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 4px 20px 4px 12px;
-  border-bottom: 1px solid #000;
+  padding: 0px 20px 6px 12px;
+  /* border-bottom: 1px solid #000; */
+  background-color: #20c997;
+  /* background: linear-gradient(90deg, #e03131 0%, #fd7e14 16%, #ffd43b 28%, #82c91e 43%, #228be6 57%, #862e9c 73%, #be4bdb 86%); */
 }
 
 .MainContainer {
@@ -23,13 +25,74 @@
 
 .SideBar {
   width: 200px;
-  border-right: 1px solid #000;
+  height: 586.5px;
+  /* border-right: 1px solid #000; */
+  background-color: #1c2536;
+}
+
+.SideBar ul {
+  color: #fff !important;
+  font-size: 15px;
+}
+
+.ant-menu-item-selected {
+  background-color: #252e3e !important;
+  color: #fff !important;
+  font-size: 18px;
+}
+
+.ant-menu-submenu .ant-menu-submenu-title:hover {
+  background-color: #252e3e !important;
+}
+
+.ant-menu-submenu li:hover {
+  background-color: #252e3e !important;
+}
+
+.ant-menu-submenu-selected .ant-menu-submenu-title {
+  color: #20c997 !important
 }
 
 .PageContent {
-  padding-left: 12px;
+  /* padding-left: 12px; */
+  margin: 0;
 }
 
 .div-table {
-  margin-top: 25px;
+  margin: 25px;
+  width: 80vw;
+}
+
+.div-table button {
+  background-color: #6366f1;
+}
+
+.div-table button:hover {
+  background-color: rgb(67, 56, 202) !important
+}
+
+th {
+  background-color: #7048e8 !important;
+  text-align: center !important
+}
+
+tr td:last-child {
+  text-align: center !important;
+}
+
+td {
+  border-top: 1px solid #9b9a9a;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+
+.table-elemnts {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 25px 15px 0px;
+}
+
+input {
+  border: 1px solid #000 !important
 }

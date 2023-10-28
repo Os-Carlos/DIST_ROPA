@@ -13,16 +13,18 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             allowNull: false
         },
-        fecha_hora: {
-            type: Sequelize.DATE,
+        fecha: {
+            type: Sequelize.DATEONLY,
             allowNull: false,
-            defaultValue: Sequelize.NOW
+            defaultValue: Sequelize.literal('CURRENT_DATE')
         },
         total: {
             type: Sequelize.FLOAT,
             allowNull: false,
             defaultValue: 0
         }
+    }, {
+        timestamps: false
     }, {
         tableName: 'compras'
     })

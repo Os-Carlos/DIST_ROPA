@@ -34,6 +34,21 @@ exports.findAll = (req, res) => {
         });
 };
 
+//get by id
+exports.findById = (req, res) => {
+    const id = req.params.id;
+
+    Cliente.findAll({ where: { id_cliente: id } })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Error al obtener los clientes"
+            });
+        });
+};
+
 //put
 exports.update = (req, res) => {
     const id = req.params.id;

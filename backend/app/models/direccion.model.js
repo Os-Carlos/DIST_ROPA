@@ -5,9 +5,17 @@ module.exports = (sequelize, Sequelize) => {
             primaryKey: true,
             autoIncrement: true
         },
-        id_entidad: {
-            type: Sequelize.INTEGER,
-            allowNull: false
+        id_cliente: {
+            type: Sequelize.INTEGER
+        },
+        id_empleado: {
+            type: Sequelize.INTEGER
+        },
+        id_proveedor: {
+            type: Sequelize.INTEGER
+        },
+        id_sucursal: {
+            type: Sequelize.INTEGER
         },
         direccion_exacta: {
             type: Sequelize.STRING,
