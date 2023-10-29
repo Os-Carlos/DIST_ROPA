@@ -8,7 +8,8 @@ const PORT = process.env.PORT || 4000;
 
 var corsOptions = {
     origin: [
-        "http://localhost:3000"
+        "http://localhost:3000",
+        "https://dist-ropa-dashboard.onrender.com"
     ]
 };
 
