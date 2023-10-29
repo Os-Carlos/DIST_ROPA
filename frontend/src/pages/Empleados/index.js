@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input } from 'antd';
+import { Table, Button, Modal, Form, Input, Typography, Space } from 'antd';
 import axios from 'axios';
 import { DeleteFilled, EditFilled, PlusOutlined } from '@ant-design/icons'
-import Typography from 'antd/es/typography/Typography';
 
 const Empleados = () => {
     const apiUrl = 'http://localhost:4000/empleados/';
@@ -49,12 +48,9 @@ const Empleados = () => {
 
     //peticion put
     const handleEdit = (record) => {
+
         setSelectedRow(record);
         setModalVisible(true);
-    };
-    const handleCancelEdit = () => {
-        setSelectedRow(null);
-        setModalVisible(false);
     };
     const handleSave = (editedData) => {
         axios.put(apiUrl + editedData.id_empleado, editedData)
@@ -65,6 +61,7 @@ const Empleados = () => {
                 setData(updatedData);
                 setModalVisible(false);
                 setSelectedRow(null);
+
             })
             .catch(error => {
                 console.error('Error al guardar los cambios:', error);
@@ -100,23 +97,24 @@ const Empleados = () => {
 
     //columnas de la tabla
     const columns = [
-        // { title: 'ID Empleado', dataIndex: 'id_empleado', key: 'id_empleado', },
         { title: 'Nombre', dataIndex: 'nombre_completo', key: 'nombre_completo', },
         { title: 'Puesto', dataIndex: 'puesto', key: 'puesto', },
-        { title: 'Comision', dataIndex: 'comision', key: 'comision', },
-        { title: 'ID Sucursal', dataIndex: 'id_sucursal', key: 'id_sucursal', },
+        { title: '% Comisión', dataIndex: 'comision', key: 'comision', },
+        { title: 'Sucursal', dataIndex: 'id_sucursal', key: 'id_sucursal', },
+        { title: 'Teléfono', dataIndex: 'telefono', key: 'telefono', },
+        { title: 'Dirección', dataIndex: 'direccion', key: 'direccion', },
         {
             title: 'Acciones',
             key: 'acciones',
             render: (record) => (
                 <div>
                     <EditFilled
-                        onClick={() => handleEdit(record)}
-                        style={{ fontSize: "20px", color: "orange" }}
+                        onClick={() => { handleEdit(record) }}
+                        style={{ fontSize: "20px", color: "#e67700" }}
                     />
                     <DeleteFilled
                         onClick={() => showDeleteConfirm(record)}
-                        style={{ fontSize: "20px", color: "red", marginLeft: "20px" }}
+                        style={{ fontSize: "20px", color: "#dc3545", marginLeft: "20px" }}
                     />
                 </div>
             ),
@@ -128,7 +126,13 @@ const Empleados = () => {
         <div className='div-table'>
             <div className='table-elemnts'>
                 <Typography style={{ fontSize: "25px" }}>Empleados</Typography>
-                <Button type="primary" onClick={handleCreate} style={{ paddingTop: 5 }}><PlusOutlined style={{ fontSize: "20px", margin: 0 }} /></Button>
+                <Button
+                    type="primary"
+                    onClick={handleCreate}
+                    style={{ paddingTop: 5 }}
+                >
+                    <PlusOutlined style={{ fontSize: "20px", margin: 0 }} />
+                </Button>
             </div>
             <Table
                 dataSource={data}
@@ -141,20 +145,38 @@ const Empleados = () => {
                 title="Editar Empleado"
                 open={modalVisible}
                 onOk={() => handleSave(selectedRow)}
-                onCancel={() => handleCancelEdit()}
+                onCancel={() => { setModalVisible(false); }}
+                destroyOnClose
             >
-                <Form initialValues={selectedRow}>
-                    <Form.Item name="nombre_completo" label="Nombre">
-                        <Input value={selectedRow?.nombre_completo} onChange={e => setSelectedRow({ ...selectedRow, nombre_completo: e.target.value })} />
-                    </Form.Item>
-                    <Form.Item name="puesto" label="Puesto">
-                        <Input value={selectedRow?.puesto} onChange={e => setSelectedRow({ ...selectedRow, puesto: e.target.value })} />
-                    </Form.Item>
-                    <Form.Item name="comision" label="% Comision">
-                        <Input value={selectedRow?.comision} onChange={e => setSelectedRow({ ...selectedRow, comision: e.target.value })} />
-                    </Form.Item>
-                    <Form.Item name="id_sucursal" label="Sucursal">
-                        <Input value={selectedRow?.id_sucursal} onChange={e => setSelectedRow({ ...selectedRow, id_sucursal: e.target.value })} />
+                <Form
+                    initialValues={selectedRow}
+                    layout='vertical'
+                    preserve={false}
+                >
+                    <Space size={'large'}>
+                        <Form.Item name="nombre_completo" label="Nombre" style={{ marginBottom: 10, width: 300 }}>
+                            <Input value={selectedRow?.nombre_completo} onChange={e => setSelectedRow({ ...selectedRow, nombre_completo: e.target.value })} />
+                        </Form.Item>
+                        <Form.Item name="telefono" label="Teléfono" style={{ marginBottom: 10 }}>
+                            <Input value={selectedRow?.telefono} onChange={e => setSelectedRow({ ...selectedRow, telefono: e.target.value })} />
+                        </Form.Item>
+
+                    </Space>
+
+                    <Space size={'small'}>
+                        <Form.Item name='puesto' label="Rut" style={{ marginBottom: 10, width: 275 }}>
+                            <Input value={selectedRow?.puesto} onChange={e => setSelectedRow({ ...selectedRow, puesto: e.target.value })} />
+                        </Form.Item >
+                        <Form.Item name="id_sucursal" label="Sucursal" style={{ marginBottom: 10 }}>
+                            <Input value={selectedRow?.id_sucursal} onChange={e => setSelectedRow({ ...selectedRow, id_sucursal: e.target.value })} />
+                        </Form.Item>
+                        <Form.Item name="comision" label="% Comisión" style={{ marginBottom: 10 }}>
+                            <Input value={selectedRow?.comision} onChange={e => setSelectedRow({ ...selectedRow, comision: e.target.value })} />
+                        </Form.Item>
+                    </Space>
+
+                    <Form.Item name="direccion" label="Dirección" style={{ marginBottom: 10 }}>
+                        <Input value={selectedRow?.direccion} onChange={e => setSelectedRow({ ...selectedRow, direccion: e.target.value })} />
                     </Form.Item>
                 </Form>
             </Modal>
@@ -168,55 +190,86 @@ const Empleados = () => {
                     setCreateModalVisible(false);
                 }}
             >
-                <Form form={createForm}>
+                <Form form={createForm} requiredMark={false} layout='vertical'>
+                    <Space size={'large'}>
+                        <Form.Item
+                            name="nombre_completo"
+                            label="Nombre"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Por favor ingresa el nombre_completo del empleado',
+                                },
+                            ]}
+                            style={{ marginBottom: 10, width: 300 }}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="telefono"
+                            label="Teléfono"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                            style={{ marginBottom: 10 }}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                    </Space>
+
+                    <Space size={'small'}>
+                        <Form.Item
+                            name="puesto"
+                            label="Puesto"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Por favor ingresa el Puesto del empleado',
+                                },
+                            ]}
+                            style={{ marginBottom: 10, width: 275 }}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="id_sucursal"
+                            label="Sucursal"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                            style={{ marginBottom: 10 }}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="comision"
+                            label="% Comisión"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                            style={{ marginBottom: 10 }}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                    </Space>
+
                     <Form.Item
-                        name="nombre_completo"
-                        label="Nombre"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Por favor ingresa el nombre del empleado',
-                            },
-                        ]}
+                        label="Dirección"
+                        name="direccion"
+                        style={{ marginBottom: 10 }}
                     >
-                        <Input />
+                        <Input placeholder='Direccion Exacta' />
                     </Form.Item>
-                    <Form.Item
-                        name="puesto"
-                        label="Puesto"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Por favor ingresa el puesto del empleado',
-                            },
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        name="comision"
-                        label="Comision"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Por favor ingresa la comision del empleado',
-                            },
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        name="id_sucursal"
-                        label="Sucursal"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Por favor ingresa el id de la sucursal',
-                            },
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item>
+
                 </Form>
             </Modal>
 

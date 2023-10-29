@@ -24,14 +24,6 @@ module.exports = (sequelize, Sequelize) => {
         direccion: {
             type: Sequelize.STRING,
             allowNull: false
-        },
-        id_departamento: {
-            type: Sequelize.INTEGER,
-            allowNull: false
-        },
-        id_municipio: {
-            type: Sequelize.INTEGER,
-            allowNull: false
         }
     }, {
         timestamps: false,

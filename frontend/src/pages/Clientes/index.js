@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Typography, Select, Space } from 'antd';
+import { Table, Button, Modal, Form, Input, Typography, Space } from 'antd';
 import axios from 'axios';
 import { DeleteFilled, EditFilled, PlusOutlined } from '@ant-design/icons'
-import { getDepartamentos, getMunicipios } from '../../api/index'
 
 const Clientes = () => {
     const apiUrl = 'http://localhost:4000/clientes/';
@@ -13,8 +12,6 @@ const Clientes = () => {
     const [createModalVisible, setCreateModalVisible] = useState(false);
     const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
     const [deletingRecord, setDeletingRecord] = useState(null);
-    const [departamentos, setDepartamentos] = useState([]);
-    const [municipios, setMunicipios] = useState([]);
 
     //peticion post
     const handleCreate = () => {
@@ -51,12 +48,9 @@ const Clientes = () => {
 
     //peticion put
     const handleEdit = (record) => {
+
         setSelectedRow(record);
         setModalVisible(true);
-    };
-    const handleCancelEdit = () => {
-        setSelectedRow(null);
-        setModalVisible(false);
     };
     const handleSave = (editedData) => {
         axios.put(apiUrl + editedData.id_cliente, editedData)
@@ -67,6 +61,7 @@ const Clientes = () => {
                 setData(updatedData);
                 setModalVisible(false);
                 setSelectedRow(null);
+
             })
             .catch(error => {
                 console.error('Error al guardar los cambios:', error);
@@ -100,37 +95,20 @@ const Clientes = () => {
         setDeletingRecord(null);
     }
 
-    //get municipios y departamentos
-    useEffect(() => {
-        // Llama a las funciones para obtener datos de departamentos y municipios
-        getDepartamentos()
-            .then(deptos => setDepartamentos(deptos))
-            .catch(error => console.error('Error al obtener departamentos:', error));
-    }, []);
-
-
     //columnas de la tabla
     const columns = [
-        // { title: 'ID Cliente', dataIndex: 'id_cliente', key: 'id_cliente', },
         { title: 'RUT', dataIndex: 'rut', key: 'rut', },
         { title: 'Nombre', dataIndex: 'nombre', key: 'nombre', },
         { title: 'Razón Social', dataIndex: 'razon_social', key: 'razon_social', },
         { title: 'Teléfono', dataIndex: 'telefono', key: 'telefono', },
-        {
-            title: 'Dirección',
-            children: [
-                { title: 'Dirección Exacta', dataIndex: 'direccion', key: 'direccion', },
-                { title: 'Departamento', dataIndex: 'id_departamento', key: 'id_departamento', },
-                { title: 'Municipio', dataIndex: 'id_municipio', key: 'id_municipio', },
-            ]
-        },
+        { title: 'Dirección', dataIndex: 'direccion', key: 'direccion', },
         {
             title: 'Acciones',
             key: 'acciones',
             render: (record) => (
                 <div>
                     <EditFilled
-                        onClick={() => handleEdit(record)}
+                        onClick={() => { handleEdit(record) }}
                         style={{ fontSize: "20px", color: "#e67700" }}
                     />
                     <DeleteFilled
@@ -147,32 +125,39 @@ const Clientes = () => {
         <div className='div-table'>
             <div className='table-elemnts'>
                 <Typography style={{ fontSize: "25px" }}>Clientes</Typography>
-                <Button type="primary" onClick={handleCreate} style={{ paddingTop: 5 }}><PlusOutlined style={{ fontSize: "20px", margin: 0 }} /></Button>
+                <Button
+                    type="primary"
+                    onClick={handleCreate}
+                    style={{ paddingTop: 5 }}
+                >
+                    <PlusOutlined style={{ fontSize: "20px", margin: 0 }} />
+                </Button>
             </div>
             <Table
                 dataSource={data}
                 columns={columns}
                 rowKey="id_cliente"
                 pagination={false}
-                className='tbl-entidad'
             />
 
             <Modal
                 title="Editar Cliente"
                 open={modalVisible}
                 onOk={() => handleSave(selectedRow)}
-                onCancel={() => handleCancelEdit()}
+                onCancel={() => { setModalVisible(false); }}
+                destroyOnClose
             >
                 <Form
                     initialValues={selectedRow}
                     layout='vertical'
+                    preserve={false}
                 >
                     <Space size={'large'}>
                         <Form.Item name="nombre" label="Nombre" style={{ marginBottom: 10, width: 300 }}>
                             <Input value={selectedRow?.nombre} onChange={e => setSelectedRow({ ...selectedRow, nombre: e.target.value })} />
                         </Form.Item>
-                        <Form.Item label="Rut" style={{ marginBottom: 10 }}>
-                            <Input name='rut' value={selectedRow?.rut} onChange={e => setSelectedRow({ ...selectedRow, rut: e.target.value })} />
+                        <Form.Item name='rut' label="Rut" style={{ marginBottom: 10 }}>
+                            <Input value={selectedRow?.rut} onChange={e => setSelectedRow({ ...selectedRow, rut: e.target.value })} />
                         </Form.Item >
                     </Space>
 
@@ -188,54 +173,6 @@ const Clientes = () => {
                     <Form.Item name="direccion" label="Dirección" style={{ marginBottom: 10 }}>
                         <Input value={selectedRow?.direccion} onChange={e => setSelectedRow({ ...selectedRow, direccion: e.target.value })} />
                     </Form.Item>
-
-                    <Space size={'large'}>
-                        <Form.Item
-                            name="id_departamento"
-                            label="Departamento"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Por favor seleccione un departamento',
-                                },
-                            ]}
-                            style={{ width: 224 }}
-                        >
-                            <Select
-                                value={selectedRow?.id_departamento}
-                                onChange={e => setSelectedRow({ ...selectedRow, id_departamento: e.target.value })}>
-                                {departamentos.map(depto => (
-                                    <Select.Option key={depto.id_departamento} value={depto.id_departamento}>
-                                        {depto.descripcion}
-                                    </Select.Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
-
-                        <Form.Item
-                            name="id_municipio"
-                            label="Municipio"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Por favor seleccione un municipio',
-                                },
-                            ]}
-                            style={{ width: 224 }}
-
-                        >
-                            <Select>
-                                {municipios
-                                    // .filter(municipio => (municipio.id_departamento === createForm.getFieldValue('id_departamento')))
-                                    .map(municipio => (
-                                        <Select.Option key={municipio.id_municipio} value={municipio.id_municipio}>
-                                            {municipio.descripcion}
-                                        </Select.Option>
-                                    ))}
-                            </Select>
-                        </Form.Item>
-                    </Space>
-
                 </Form>
             </Modal>
 
@@ -315,55 +252,6 @@ const Clientes = () => {
                         <Input placeholder='Direccion Exacta' />
                     </Form.Item>
 
-                    <Space size={'large'}>
-                        <Form.Item
-                            name="id_departamento"
-                            label="Departamento"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Por favor seleccione un departamento',
-                                },
-                            ]}
-                            style={{ width: 224 }}
-                        >
-                            <Select
-                                onChange={(value) => {
-                                    getMunicipios(value)
-                                        .then(municipiosData => setMunicipios(municipiosData))
-                                        .catch(error => console.error('Error al obtener municipios:', error));
-                                }}>
-                                {departamentos.map(depto => (
-                                    <Select.Option key={depto.id_departamento} value={depto.id_departamento}>
-                                        {depto.descripcion}
-                                    </Select.Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
-
-                        <Form.Item
-                            name="id_municipio"
-                            label="Municipio"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Por favor seleccione un municipio',
-                                },
-                            ]}
-                            style={{ width: 224 }}
-
-                        >
-                            <Select>
-                                {municipios
-                                    // .filter(municipio => (municipio.id_departamento === createForm.getFieldValue('id_departamento')))
-                                    .map(municipio => (
-                                        <Select.Option key={municipio.id_municipio} value={municipio.id_municipio}>
-                                            {municipio.descripcion}
-                                        </Select.Option>
-                                    ))}
-                            </Select>
-                        </Form.Item>
-                    </Space>
                 </Form>
             </Modal>
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input } from 'antd';
+import { Table, Button, Modal, Form, Input, Typography, Space } from 'antd';
 import axios from 'axios';
-import { DeleteFilled, EditFilled } from '@ant-design/icons'
+import { DeleteFilled, EditFilled, PlusOutlined } from '@ant-design/icons'
 
 const Productos = () => {
     const apiUrl = 'http://localhost:4000/productos/';
@@ -48,6 +48,7 @@ const Productos = () => {
 
     //peticion put
     const handleEdit = (record) => {
+
         setSelectedRow(record);
         setModalVisible(true);
     };
@@ -60,6 +61,7 @@ const Productos = () => {
                 setData(updatedData);
                 setModalVisible(false);
                 setSelectedRow(null);
+
             })
             .catch(error => {
                 console.error('Error al guardar los cambios:', error);
@@ -95,23 +97,23 @@ const Productos = () => {
 
     //columnas de la tabla
     const columns = [
-        // { title: 'ID Producto', dataIndex: 'id_producto', key: 'id_producto', },
-        { title: 'Descripcion', dataIndex: 'descripcion', key: 'descripcion', },
-        { title: 'ID Proveedor', dataIndex: 'id_proveedor', key: 'id_proveedor', },
-        { title: 'Precio Venta', dataIndex: 'precio_venta', key: 'precio_venta', },
-        { title: 'Stock', dataIndex: 'stock', key: 'stock', },
+        { title: 'RUT', dataIndex: 'rut', key: 'rut', },
+        { title: 'Nombre', dataIndex: 'nombre', key: 'nombre', },
+        { title: 'Razón Social', dataIndex: 'razon_social', key: 'razon_social', },
+        { title: 'Teléfono', dataIndex: 'telefono', key: 'telefono', },
+        { title: 'Dirección', dataIndex: 'direccion', key: 'direccion', },
         {
             title: 'Acciones',
             key: 'acciones',
             render: (record) => (
                 <div>
                     <EditFilled
-                        onClick={() => handleEdit(record)}
-                        style={{ fontSize: "20px", color: "orange" }}
+                        onClick={() => { handleEdit(record) }}
+                        style={{ fontSize: "20px", color: "#e67700" }}
                     />
                     <DeleteFilled
                         onClick={() => showDeleteConfirm(record)}
-                        style={{ fontSize: "20px", color: "red", marginLeft: "20px" }}
+                        style={{ fontSize: "20px", color: "#dc3545", marginLeft: "20px" }}
                     />
                 </div>
             ),
@@ -121,8 +123,16 @@ const Productos = () => {
     //componente principal
     return (
         <div className='div-table'>
-            <Button type="primary" onClick={handleCreate} style={{ marginBottom: "20px" }}>Agregar Producto</Button>
-
+            <div className='table-elemnts'>
+                <Typography style={{ fontSize: "25px" }}>Productos</Typography>
+                <Button
+                    type="primary"
+                    onClick={handleCreate}
+                    style={{ paddingTop: 5 }}
+                >
+                    <PlusOutlined style={{ fontSize: "20px", margin: 0 }} />
+                </Button>
+            </div>
             <Table
                 dataSource={data}
                 columns={columns}
@@ -134,20 +144,34 @@ const Productos = () => {
                 title="Editar Producto"
                 open={modalVisible}
                 onOk={() => handleSave(selectedRow)}
-                onCancel={() => setModalVisible(false)}
+                onCancel={() => { setModalVisible(false); }}
+                destroyOnClose
             >
-                <Form initialValues={selectedRow}>
-                    <Form.Item name="descripcion" label="Descripcion">
-                        <Input value={selectedRow?.descripcion} onChange={e => setSelectedRow({ ...selectedRow, descripcion: e.target.value })} />
-                    </Form.Item>
-                    <Form.Item name="id_proveedor" label="ID Proveedor">
-                        <Input value={selectedRow?.id_proveedor} onChange={e => setSelectedRow({ ...selectedRow, id_proveedor: e.target.value })} />
-                    </Form.Item>
-                    <Form.Item name="precio_venta" label="Precio Venta">
-                        <Input value={selectedRow?.precio_venta} onChange={e => setSelectedRow({ ...selectedRow, precio_venta: e.target.value })} />
-                    </Form.Item>
-                    <Form.Item name="stock" label="Sucursal">
-                        <Input value={selectedRow?.stock} onChange={e => setSelectedRow({ ...selectedRow, stock: e.target.value })} />
+                <Form
+                    initialValues={selectedRow}
+                    layout='vertical'
+                    preserve={false}
+                >
+                    <Space size={'large'}>
+                        <Form.Item name="nombre" label="Nombre" style={{ marginBottom: 10, width: 300 }}>
+                            <Input value={selectedRow?.nombre} onChange={e => setSelectedRow({ ...selectedRow, nombre: e.target.value })} />
+                        </Form.Item>
+                        <Form.Item name='rut' label="Rut" style={{ marginBottom: 10 }}>
+                            <Input value={selectedRow?.rut} onChange={e => setSelectedRow({ ...selectedRow, rut: e.target.value })} />
+                        </Form.Item >
+                    </Space>
+
+                    <Space size={'large'}>
+                        <Form.Item name="razon_social" label="Razón Social" style={{ marginBottom: 10, width: 300 }}>
+                            <Input value={selectedRow?.razon_social} onChange={e => setSelectedRow({ ...selectedRow, razon_social: e.target.value })} />
+                        </Form.Item>
+                        <Form.Item name="telefono" label="Teléfono" style={{ marginBottom: 10 }}>
+                            <Input value={selectedRow?.telefono} onChange={e => setSelectedRow({ ...selectedRow, telefono: e.target.value })} />
+                        </Form.Item>
+                    </Space>
+
+                    <Form.Item name="direccion" label="Dirección" style={{ marginBottom: 10 }}>
+                        <Input value={selectedRow?.direccion} onChange={e => setSelectedRow({ ...selectedRow, direccion: e.target.value })} />
                     </Form.Item>
                 </Form>
             </Modal>
@@ -161,55 +185,73 @@ const Productos = () => {
                     setCreateModalVisible(false);
                 }}
             >
-                <Form form={createForm}>
+                <Form form={createForm} requiredMark={false} layout='vertical'>
+                    <Space size={'large'}>
+                        <Form.Item
+                            name="nombre"
+                            label="Nombre"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Por favor ingresa el nombre del producto',
+                                },
+                            ]}
+                            style={{ marginBottom: 10, width: 300 }}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="rut"
+                            label="RUT"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Por favor ingresa el RUT del producto',
+                                },
+                            ]}
+                            style={{ marginBottom: 10 }}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                    </Space>
+
+                    <Space size={'large'}>
+                        <Form.Item
+                            name="razon_social"
+                            label="Razón Social"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                            style={{ marginBottom: 10, width: 300 }}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="telefono"
+                            label="Teléfono"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                            style={{ marginBottom: 10 }}
+                        >
+                            <Input />
+                        </Form.Item>
+                    </Space>
+
                     <Form.Item
-                        name="descripcion"
-                        label="Descripcion"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Por favor ingresa descripcion del producto',
-                            },
-                        ]}
+                        label="Dirección"
+                        name="direccion"
+                        style={{ marginBottom: 10 }}
                     >
-                        <Input />
+                        <Input placeholder='Direccion Exacta' />
                     </Form.Item>
-                    <Form.Item
-                        name="id_proveedor"
-                        label="ID Proveedor"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Por favor ingresa el id_proveedor del producto',
-                            },
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        name="precio_venta"
-                        label="Precio Venta"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Por favor ingresa el precio_venta del producto',
-                            },
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        name="stock"
-                        label="Stock"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Por favor ingresa el stock del producto',
-                            },
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item>
+
                 </Form>
             </Modal>
 

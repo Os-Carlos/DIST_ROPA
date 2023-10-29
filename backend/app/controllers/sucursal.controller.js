@@ -8,9 +8,7 @@ exports.create = (req, res) => {
         nombre: req.body.nombre,
         horario: req.body.horario,
         telefono: req.body.telefono,
-        direccion: req.body.direccion,
-        id_departamento: req.body.id_departamento,
-        id_municipio: req.body.id_municipio
+        direccion: req.body.direccion
     }
 
     Sucursal.create(sucursal)

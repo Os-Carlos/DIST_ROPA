@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input } from 'antd';
+import { Table, Button, Modal, Form, Input, Typography, Space } from 'antd';
 import axios from 'axios';
-import { DeleteFilled, EditFilled } from '@ant-design/icons'
+import { DeleteFilled, EditFilled, PlusOutlined } from '@ant-design/icons'
 
 const Proveedores = () => {
     const apiUrl = 'http://localhost:4000/proveedores/';
@@ -48,6 +48,7 @@ const Proveedores = () => {
 
     //peticion put
     const handleEdit = (record) => {
+
         setSelectedRow(record);
         setModalVisible(true);
     };
@@ -60,6 +61,7 @@ const Proveedores = () => {
                 setData(updatedData);
                 setModalVisible(false);
                 setSelectedRow(null);
+
             })
             .catch(error => {
                 console.error('Error al guardar los cambios:', error);
@@ -93,24 +95,25 @@ const Proveedores = () => {
         setDeletingRecord(null);
     }
 
-    //columnas de la taabla
+    //columnas de la tabla
     const columns = [
-        //{ title: 'ID Proveedor', dataIndex: 'id_proveedor', key: 'id_proveedor', },
         { title: 'RUT', dataIndex: 'rut', key: 'rut', },
         { title: 'Nombre', dataIndex: 'nombre', key: 'nombre', },
         { title: 'Contacto', dataIndex: 'contacto', key: 'contacto', },
+        { title: 'Teléfono', dataIndex: 'telefono', key: 'telefono', },
+        { title: 'Dirección', dataIndex: 'direccion', key: 'direccion', },
         {
             title: 'Acciones',
             key: 'acciones',
             render: (record) => (
                 <div>
                     <EditFilled
-                        onClick={() => handleEdit(record)}
-                        style={{ fontSize: "20px", color: "orange" }}
+                        onClick={() => { handleEdit(record) }}
+                        style={{ fontSize: "20px", color: "#e67700" }}
                     />
                     <DeleteFilled
                         onClick={() => showDeleteConfirm(record)}
-                        style={{ fontSize: "20px", color: "red", marginLeft: "20px" }}
+                        style={{ fontSize: "20px", color: "#dc3545", marginLeft: "20px" }}
                     />
                 </div>
             ),
@@ -120,8 +123,16 @@ const Proveedores = () => {
     //componente principal
     return (
         <div className='div-table'>
-            <Button type="primary" onClick={handleCreate} style={{ marginBottom: "20px" }}>Agregar Proveedor</Button>
-
+            <div className='table-elemnts'>
+                <Typography style={{ fontSize: "25px" }}>Proveedores</Typography>
+                <Button
+                    type="primary"
+                    onClick={handleCreate}
+                    style={{ paddingTop: 5 }}
+                >
+                    <PlusOutlined style={{ fontSize: "20px", margin: 0 }} />
+                </Button>
+            </div>
             <Table
                 dataSource={data}
                 columns={columns}
@@ -133,17 +144,34 @@ const Proveedores = () => {
                 title="Editar Proveedor"
                 open={modalVisible}
                 onOk={() => handleSave(selectedRow)}
-                onCancel={() => setModalVisible(false)}
+                onCancel={() => { setModalVisible(false); }}
+                destroyOnClose
             >
-                <Form initialValues={selectedRow}>
-                    <Form.Item name="rut" label="Rut">
-                        <Input value={selectedRow?.rut} onChange={e => setSelectedRow({ ...selectedRow, rut: e.target.value })} />
-                    </Form.Item>
-                    <Form.Item name="nombre" label="Nombre">
-                        <Input value={selectedRow?.nombre} onChange={e => setSelectedRow({ ...selectedRow, nombre: e.target.value })} />
-                    </Form.Item>
-                    <Form.Item name="contacto" label="Contacto">
-                        <Input value={selectedRow?.contacto} onChange={e => setSelectedRow({ ...selectedRow, contacto: e.target.value })} />
+                <Form
+                    initialValues={selectedRow}
+                    layout='vertical'
+                    preserve={false}
+                >
+                    <Space size={'large'}>
+                        <Form.Item name="nombre" label="Nombre" style={{ marginBottom: 10, width: 300 }}>
+                            <Input value={selectedRow?.nombre} onChange={e => setSelectedRow({ ...selectedRow, nombre: e.target.value })} />
+                        </Form.Item>
+                        <Form.Item name='rut' label="Rut" style={{ marginBottom: 10 }}>
+                            <Input value={selectedRow?.rut} onChange={e => setSelectedRow({ ...selectedRow, rut: e.target.value })} />
+                        </Form.Item >
+                    </Space>
+
+                    <Space size={'large'}>
+                        <Form.Item name="contacto" label="Contacto" style={{ marginBottom: 10, width: 300 }}>
+                            <Input value={selectedRow?.contacto} onChange={e => setSelectedRow({ ...selectedRow, contacto: e.target.value })} />
+                        </Form.Item>
+                        <Form.Item name="telefono" label="Teléfono" style={{ marginBottom: 10 }}>
+                            <Input value={selectedRow?.telefono} onChange={e => setSelectedRow({ ...selectedRow, telefono: e.target.value })} />
+                        </Form.Item>
+                    </Space>
+
+                    <Form.Item name="direccion" label="Dirección" style={{ marginBottom: 10 }}>
+                        <Input value={selectedRow?.direccion} onChange={e => setSelectedRow({ ...selectedRow, direccion: e.target.value })} />
                     </Form.Item>
                 </Form>
             </Modal>
@@ -157,43 +185,73 @@ const Proveedores = () => {
                     setCreateModalVisible(false);
                 }}
             >
-                <Form form={createForm}>
+                <Form form={createForm} requiredMark={false} layout='vertical'>
+                    <Space size={'large'}>
+                        <Form.Item
+                            name="nombre"
+                            label="Nombre"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Por favor ingresa el nombre del proveedor',
+                                },
+                            ]}
+                            style={{ marginBottom: 10, width: 300 }}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="rut"
+                            label="RUT"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Por favor ingresa el RUT del proveedor',
+                                },
+                            ]}
+                            style={{ marginBottom: 10 }}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                    </Space>
+
+                    <Space size={'large'}>
+                        <Form.Item
+                            name="contacto"
+                            label="Contacto"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                            style={{ marginBottom: 10, width: 300 }}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="telefono"
+                            label="Teléfono"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                            style={{ marginBottom: 10 }}
+                        >
+                            <Input />
+                        </Form.Item>
+                    </Space>
+
                     <Form.Item
-                        name="rut"
-                        label="RUT"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Por favor ingresa el RUT del proveedor',
-                            },
-                        ]}
+                        label="Dirección"
+                        name="direccion"
+                        style={{ marginBottom: 10 }}
                     >
-                        <Input />
+                        <Input placeholder='Direccion Exacta' />
                     </Form.Item>
-                    <Form.Item
-                        name="nombre"
-                        label="Nombre"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Por favor ingresa el nombre del proveedor',
-                            },
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        name="contacto"
-                        label="Contacto"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Por favor ingresa el contacto del proveedor',
-                            },
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item>
+
                 </Form>
             </Modal>
 
