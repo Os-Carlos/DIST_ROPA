@@ -4,6 +4,7 @@ module.exports = app => {
 
     router.post("/", departamentos.create);
     router.get("/", departamentos.findAll);
+    router.get("/:depto/municipios", departamentos.findMunicipios);
     router.put("/:id", departamentos.update);
     router.delete("/:id", departamentos.delete);
 

@@ -18,8 +18,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false
         }
     }, {
-        timestamps: false
-    }, {
+        timestamps: false,
         tableName: 'factura_detalles'
     })
     return Factura_Detalle;

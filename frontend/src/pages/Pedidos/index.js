@@ -137,7 +137,7 @@ const Pedidos = () => {
                 onOk={() => handleSave(selectedRow)}
                 onCancel={() => setModalVisible(false)}
             >
-                <Form initialValues={selectedRow}>
+                <Form initialValues={selectedRow} layout='vertical'>
                     <Form.Item name="numero_factura" label="Factura">
                         <Input value={selectedRow?.numero_factura} onChange={e => setSelectedRow({ ...selectedRow, numero_factura: e.target.value })} />
                     </Form.Item>
@@ -155,8 +155,9 @@ const Pedidos = () => {
                     createForm.resetFields();
                     setCreateModalVisible(false);
                 }}
+
             >
-                <Form form={createForm}>
+                <Form form={createForm} layout='vertical'>
                     <Form.Item
                         name="numero_factura"
                         label="Factura"

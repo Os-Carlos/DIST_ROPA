@@ -8,7 +8,11 @@ exports.create = (req, res) => {
         nombre_completo: req.body.nombre_completo,
         puesto: req.body.puesto,
         comision: req.body.comision,
-        id_sucursal: req.body.id_sucursal
+        id_sucursal: req.body.id_sucursal,
+        telefono: req.body.telefono,
+        direccion: req.body.direccion,
+        id_departamento: req.body.id_departamento,
+        id_municipio: req.body.id_municipio
     }
 
     Empleado.create(empleado)

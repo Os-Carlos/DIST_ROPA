@@ -52,6 +52,10 @@ const Empleados = () => {
         setSelectedRow(record);
         setModalVisible(true);
     };
+    const handleCancelEdit = () => {
+        setSelectedRow(null);
+        setModalVisible(false);
+    };
     const handleSave = (editedData) => {
         axios.put(apiUrl + editedData.id_empleado, editedData)
             .then(() => {
@@ -137,7 +141,7 @@ const Empleados = () => {
                 title="Editar Empleado"
                 open={modalVisible}
                 onOk={() => handleSave(selectedRow)}
-                onCancel={() => setModalVisible(false)}
+                onCancel={() => handleCancelEdit()}
             >
                 <Form initialValues={selectedRow}>
                     <Form.Item name="nombre_completo" label="Nombre">

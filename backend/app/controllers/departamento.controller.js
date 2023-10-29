@@ -1,5 +1,7 @@
+const { where } = require("sequelize");
 const db = require("../models");
 const Departamento = db.departamentos;
+const Municipio = db.municipios;
 const Op = db.Sequelize.Op;
 
 //post
@@ -30,6 +32,33 @@ exports.findAll = (req, res) => {
                 message: err.message || "Error al obtener los departamentos"
             });
         });
+};
+
+//get all municipios
+exports.findMunicipios = async (req, res) => {
+    const depto = req.params.depto;
+
+    try {
+        // Busca el departamento por descripción
+        const departamento = await Departamento.findOne({ where: { id_departamento: depto } });
+
+        if (!departamento) {
+            return res.status(404).send({ message: "Departamento no encontrado" });
+        }
+
+        // Ahora que tienes el departamento, busca los municipios con el mismo id_departamento
+        const municipios = await Municipio.findAll({ where: { id_departamento: departamento.id_departamento } });
+
+        if (municipios.length === 0) {
+            return res.status(404).send({ message: "No se encontraron municipios para este departamento" });
+        }
+
+        res.send(municipios);
+    } catch (err) {
+        res.status(500).send({
+            message: err.message || "Error al obtener los municipios"
+        });
+    }
 };
 
 //put

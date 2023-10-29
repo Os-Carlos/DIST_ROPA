@@ -6,7 +6,11 @@ const Op = db.Sequelize.Op;
 exports.create = (req, res) => {
     const sucursal = {
         nombre: req.body.nombre,
-        horario: req.body.horario
+        horario: req.body.horario,
+        telefono: req.body.telefono,
+        direccion: req.body.direccion,
+        id_departamento: req.body.id_departamento,
+        id_municipio: req.body.id_municipio
     }
 
     Sucursal.create(sucursal)

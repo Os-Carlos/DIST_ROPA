@@ -7,7 +7,11 @@ exports.create = (req, res) => {
     const proveedor = {
         nombre: req.body.nombre,
         contacto: req.body.contacto,
-        rut: req.body.rut
+        rut: req.body.rut,
+        telefono: req.body.telefono,
+        direccion: req.body.direccion,
+        id_departamento: req.body.id_departamento,
+        id_municipio: req.body.id_municipio
     }
 
     Proveedor.create(proveedor)

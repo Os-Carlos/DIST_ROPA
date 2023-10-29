@@ -28,6 +28,7 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: 0
         }
     }, {
+        timestamps: false,
         tableName: 'facturas'
     })
     return Factura;

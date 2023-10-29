@@ -96,3 +96,23 @@ td {
 input {
   border: 1px solid #000 !important
 }
+
+.ant-select-selector {
+  border: 1px solid #000 !important
+}
+
+.ant-select-arrow {
+  color: #000 !important
+}
+
+.tbl-entidad table th:nth-child(5) {
+  background-color: #6366f1 !important;
+  /* Cambia el color de fondo */
+  color: #000;
+  /* Cambia el color del texto */
+  /* Agrega otros estilos según tus necesidades */
+}
+
+.tbl-entidad th {
+  padding: 5px !important
+}

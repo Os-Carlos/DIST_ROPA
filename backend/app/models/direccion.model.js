@@ -30,6 +30,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false
         }
     }, {
+        timestamps: false,
         tableName: 'direcciones'
     })
     return Direccion;

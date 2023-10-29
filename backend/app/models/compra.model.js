@@ -24,8 +24,7 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: 0
         }
     }, {
-        timestamps: false
-    }, {
+        timestamps: false,
         tableName: 'compras'
     })
     return Compra;

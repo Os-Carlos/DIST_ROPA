@@ -7,7 +7,11 @@ exports.create = (req, res) => {
     const cliente = {
         rut: req.body.rut,
         nombre: req.body.nombre,
-        razon_social: req.body.razon_social
+        razon_social: req.body.razon_social,
+        telefono: req.body.telefono,
+        direccion: req.body.direccion,
+        id_departamento: req.body.id_departamento,
+        id_municipio: req.body.id_municipio
     }
 
     Cliente.create(cliente)
