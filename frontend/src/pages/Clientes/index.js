@@ -4,7 +4,7 @@ import axios from 'axios';
 import { DeleteFilled, EditFilled, PlusOutlined } from '@ant-design/icons'
 
 const Clientes = () => {
-    const apiUrl = 'http://localhost:4000/clientes/';
+    const apiUrl = 'https://dist-ropa-api.onrender.com/clientes/';
     const [data, setData] = useState([]);
     const [selectedRow, setSelectedRow] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);

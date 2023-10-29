@@ -12,8 +12,8 @@
   align-items: center;
   padding: 0px 20px 6px 12px;
   /* border-bottom: 1px solid #000; */
-  background-color: #20c997;
-  /* background: linear-gradient(90deg, #e03131 0%, #fd7e14 16%, #ffd43b 28%, #82c91e 43%, #228be6 57%, #862e9c 73%, #be4bdb 86%); */
+  /* background-color: #20c997; */
+  background: linear-gradient(90deg, #e03131 0%, #fd7e14 16%, #ffd43b 28%, #82c91e 43%, #228be6 57%, #862e9c 73%, #be4bdb 86%);
 }
 
 .MainContainer {
