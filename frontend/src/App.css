@@ -49,6 +49,11 @@
   background-color: #252e3e !important;
 }
 
+.ant-menu-item:hover {
+  background-color: #252e3e !important;
+  color: #fff !important
+}
+
 .ant-menu-submenu-selected .ant-menu-submenu-title {
   color: #20c997 !important
 }

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Typography } from 'antd';
+import { Table, Button, Modal, Form, Input, Typography, Space } from 'antd';
 import axios from 'axios';
 import { DeleteFilled, EditFilled, PlusOutlined } from '@ant-design/icons'
 
 const Sucursales = () => {
-    const apiUrl = 'http://localhost:4000/sucursales/';
+    const apiUrl = 'https://dist-ropa-api.onrender.com/sucursales/';
     const [data, setData] = useState([]);
     const [selectedRow, setSelectedRow] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
@@ -48,6 +48,7 @@ const Sucursales = () => {
 
     //peticion put
     const handleEdit = (record) => {
+
         setSelectedRow(record);
         setModalVisible(true);
     };
@@ -60,6 +61,7 @@ const Sucursales = () => {
                 setData(updatedData);
                 setModalVisible(false);
                 setSelectedRow(null);
+
             })
             .catch(error => {
                 console.error('Error al guardar los cambios:', error);
@@ -95,16 +97,17 @@ const Sucursales = () => {
 
     //columnas de la tabla
     const columns = [
-        // { title: 'ID Sucursal', dataIndex: 'id_sucursal', key: 'id_sucursal', },        
         { title: 'Nombre', dataIndex: 'nombre', key: 'nombre', },
         { title: 'Horario', dataIndex: 'horario', key: 'horario', },
+        { title: 'Teléfono', dataIndex: 'telefono', key: 'telefono', },
+        { title: 'Dirección', dataIndex: 'direccion', key: 'direccion', },
         {
             title: 'Acciones',
             key: 'acciones',
             render: (record) => (
                 <div>
                     <EditFilled
-                        onClick={() => handleEdit(record)}
+                        onClick={() => { handleEdit(record) }}
                         style={{ fontSize: "20px", color: "#e67700" }}
                     />
                     <DeleteFilled
@@ -121,7 +124,13 @@ const Sucursales = () => {
         <div className='div-table'>
             <div className='table-elemnts'>
                 <Typography style={{ fontSize: "25px" }}>Sucursales</Typography>
-                <Button type="primary" onClick={handleCreate} style={{ paddingTop: 5 }}><PlusOutlined style={{ fontSize: "20px", margin: 0 }} /></Button>
+                <Button
+                    type="primary"
+                    onClick={handleCreate}
+                    style={{ paddingTop: 5 }}
+                >
+                    <PlusOutlined style={{ fontSize: "20px", margin: 0 }} />
+                </Button>
             </div>
             <Table
                 dataSource={data}
@@ -134,20 +143,29 @@ const Sucursales = () => {
                 title="Editar Sucursal"
                 open={modalVisible}
                 onOk={() => handleSave(selectedRow)}
-                onCancel={() => setModalVisible(false)}
+                onCancel={() => { setModalVisible(false); }}
+                destroyOnClose
             >
                 <Form
                     initialValues={selectedRow}
                     layout='vertical'
+                    preserve={false}
                 >
-                    <Form.Item name="rut" label="Rut">
-                        <Input value={selectedRow?.rut} onChange={e => setSelectedRow({ ...selectedRow, rut: e.target.value })} />
-                    </Form.Item>
-                    <Form.Item name="nombre" label="Nombre">
+                    <Form.Item name="nombre" label="Nombre" style={{ marginBottom: 10 }}>
                         <Input value={selectedRow?.nombre} onChange={e => setSelectedRow({ ...selectedRow, nombre: e.target.value })} />
                     </Form.Item>
-                    <Form.Item name="horario" label="Horario">
-                        <Input value={selectedRow?.horario} onChange={e => setSelectedRow({ ...selectedRow, horario: e.target.value })} />
+
+                    <Space size={'large'}>
+                        <Form.Item name="horario" label="Horario" style={{ marginBottom: 10, width: 224 }}>
+                            <Input value={selectedRow?.horario} onChange={e => setSelectedRow({ ...selectedRow, horario: e.target.value })} />
+                        </Form.Item>
+                        <Form.Item name="telefono" label="Teléfono" style={{ marginBottom: 10, width: 224 }}>
+                            <Input value={selectedRow?.telefono} onChange={e => setSelectedRow({ ...selectedRow, telefono: e.target.value })} />
+                        </Form.Item>
+                    </Space>
+
+                    <Form.Item name="direccion" label="Dirección" style={{ marginBottom: 10 }}>
+                        <Input value={selectedRow?.direccion} onChange={e => setSelectedRow({ ...selectedRow, direccion: e.target.value })} />
                     </Form.Item>
                 </Form>
             </Modal>
@@ -163,35 +181,54 @@ const Sucursales = () => {
             >
                 <Form form={createForm} requiredMark={false} layout='vertical'>
                     <Form.Item
-                        name="rut"
-                        label="RUT"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Por favor ingresa el RUT del cliente',
-                            },
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
                         name="nombre"
                         label="Nombre"
                         rules={[
                             {
                                 required: true,
-                                message: 'Por favor ingresa el nombre del cliente',
+                                message: 'Por favor ingresa el nombre del sucursal',
                             },
                         ]}
+                        style={{ marginBottom: 10 }}
                     >
                         <Input />
                     </Form.Item>
+
+                    <Space size={'large'}>
+                        <Form.Item
+                            name="horario"
+                            label="Horario"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                            style={{ marginBottom: 10, width: 224 }}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="telefono"
+                            label="Teléfono"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                            style={{ marginBottom: 10, width: 224 }}
+                        >
+                            <Input />
+                        </Form.Item>
+                    </Space>
+
                     <Form.Item
-                        name="horario"
-                        label="Horario"
+                        label="Dirección"
+                        name="direccion"
+                        style={{ marginBottom: 10 }}
                     >
-                        <Input />
+                        <Input placeholder='Direccion Exacta' />
                     </Form.Item>
+
                 </Form>
             </Modal>
 
