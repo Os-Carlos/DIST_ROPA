@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Input, Typography, Space } from 'antd';
 import axios from 'axios';
-import { DeleteFilled, EditFilled, PlusOutlined } from '@ant-design/icons'
+import { PlusOutlined } from '@ant-design/icons'
 
 const Inventario = () => {
     const apiUrl = 'https://dist-ropa-api.onrender.com/inventarios/';
     const [data, setData] = useState([]);
-    const [selectedRow, setSelectedRow] = useState(null);
-    const [modalVisible, setModalVisible] = useState(false);
+    // const [selectedRow, setSelectedRow] = useState(null);
+    // const [modalVisible, setModalVisible] = useState(false);
     const [createForm] = Form.useForm();
     const [createModalVisible, setCreateModalVisible] = useState(false);
-    const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
-    const [deletingRecord, setDeletingRecord] = useState(null);
-    const [loading, setLoading] = useState(false);
+    // const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
+    // const [deletingRecord, setDeletingRecord] = useState(null);
 
     //peticion post
     const handleCreate = () => {
@@ -38,8 +37,6 @@ const Inventario = () => {
 
     //peticion get
     useEffect(() => {
-        setLoading(true);
-
         axios.get(apiUrl)
             .then(response => {
                 setData(response.data);
@@ -47,82 +44,81 @@ const Inventario = () => {
             .catch(error => {
                 console.error('Error al obtener los datos:', error);
             });
-        setLoading(false);
     }, []);
 
-    //peticion put
-    const handleEdit = (record) => {
+    // //peticion put
+    // const handleEdit = (record) => {
 
-        setSelectedRow(record);
-        setModalVisible(true);
-    };
-    const handleSave = (editedData) => {
-        axios.put(apiUrl + editedData.id_inventario, editedData)
-            .then(() => {
-                const updatedData = data.map(item =>
-                    item.id_inventario === editedData.id_inventario ? editedData : item
-                );
-                setData(updatedData);
-                setModalVisible(false);
-                setSelectedRow(null);
+    //     setSelectedRow(record);
+    //     setModalVisible(true);
+    // };
+    // const handleSave = (editedData) => {
+    //     axios.put(apiUrl + editedData.id_inventario, editedData)
+    //         .then(() => {
+    //             const updatedData = data.map(item =>
+    //                 item.id_inventario === editedData.id_inventario ? editedData : item
+    //             );
+    //             setData(updatedData);
+    //             setModalVisible(false);
+    //             setSelectedRow(null);
 
-            })
-            .catch(error => {
-                console.error('Error al guardar los cambios:', error);
-            });
-    };
+    //         })
+    //         .catch(error => {
+    //             console.error('Error al guardar los cambios:', error);
+    //         });
+    // };
 
-    //peticion delete
-    const showDeleteConfirm = (record) => {
-        setDeleteConfirmVisible(true);
-        setDeletingRecord(record);
-    };
-    const handleDelete = () => {
-        // Cerrar la alerta de confirmación
-        setDeleteConfirmVisible(false);
+    // //peticion delete
+    // const showDeleteConfirm = (record) => {
+    //     setDeleteConfirmVisible(true);
+    //     setDeletingRecord(record);
+    // };
+    // const handleDelete = () => {
+    //     // Cerrar la alerta de confirmación
+    //     setDeleteConfirmVisible(false);
 
-        // Eliminar el registro
-        if (deletingRecord) {
-            axios.delete(apiUrl + deletingRecord.id_inventario)
-                .then(() => {
-                    // Actualizar la lista de datos después de eliminar el registro
-                    setData(data.filter(item => item.id_inventario !== deletingRecord.id_inventario));
-                })
-                .catch(error => {
-                    console.error('Error al eliminar el registro:', error);
-                });
-        }
-    };
-    const handleCancelDelete = () => {
-        // Cancelar la eliminación y cerrar la alerta de confirmación
-        setDeleteConfirmVisible(false);
-        setDeletingRecord(null);
-    }
+    //     // Eliminar el registro
+    //     if (deletingRecord) {
+    //         axios.delete(apiUrl + deletingRecord.id_inventario)
+    //             .then(() => {
+    //                 // Actualizar la lista de datos después de eliminar el registro
+    //                 setData(data.filter(item => item.id_inventario !== deletingRecord.id_inventario));
+    //             })
+    //             .catch(error => {
+    //                 console.error('Error al eliminar el registro:', error);
+    //             });
+    //     }
+    // };
+    // const handleCancelDelete = () => {
+    //     // Cancelar la eliminación y cerrar la alerta de confirmación
+    //     setDeleteConfirmVisible(false);
+    //     setDeletingRecord(null);
+    // }
 
     //columnas de la tabla
     const columns = [
         { title: 'Fecha', dataIndex: 'fecha', key: 'fecha', },
-        { title: 'Inventario', dataIndex: 'id_producto', key: 'id_producto', },
+        { title: 'Producto', dataIndex: 'id_producto', key: 'id_producto', },
         { title: 'Sucursal', dataIndex: 'id_sucursal', key: 'id_sucursal', },
         { title: 'Stock', dataIndex: 'stock', key: 'stock', },
         { title: 'Precio Venta', dataIndex: 'precio_venta', key: 'precio_venta', },
         { title: 'Precio Compra', dataIndex: 'precio_compra', key: 'precio_compra', },
-        {
-            title: 'Acciones',
-            key: 'acciones',
-            render: (record) => (
-                <div>
-                    <EditFilled
-                        onClick={() => { handleEdit(record) }}
-                        style={{ fontSize: "20px", color: "#e67700" }}
-                    />
-                    <DeleteFilled
-                        onClick={() => showDeleteConfirm(record)}
-                        style={{ fontSize: "20px", color: "#dc3545", marginLeft: "20px" }}
-                    />
-                </div>
-            ),
-        },
+        // {
+        //     title: 'Acciones',
+        //     key: 'acciones',
+        //     render: (record) => (
+        //         <div>
+        //             <EditFilled
+        //                 onClick={() => { handleEdit(record) }}
+        //                 style={{ fontSize: "20px", color: "#e67700" }}
+        //             />
+        //             <DeleteFilled
+        //                 onClick={() => showDeleteConfirm(record)}
+        //                 style={{ fontSize: "20px", color: "#dc3545", marginLeft: "20px" }}
+        //             />
+        //         </div>
+        //     ),
+        // },
     ];
 
     //componente principal
@@ -143,9 +139,8 @@ const Inventario = () => {
                 columns={columns}
                 rowKey="id_inventario"
                 pagination={false}
-                loading={loading}
             />
-
+            {/* 
             <Modal
                 title="Editar Inventario"
                 open={modalVisible}
@@ -178,7 +173,7 @@ const Inventario = () => {
                         </Form.Item>
                     </Space>
                 </Form>
-            </Modal>
+            </Modal> */}
 
             <Modal
                 title="Agregar Inventario"
@@ -274,7 +269,7 @@ const Inventario = () => {
                     </Space>
                 </Form>
             </Modal>
-
+            {/* 
             <Modal
                 title="Esta seguro de querer eliminar este registro?"
                 open={deleteConfirmVisible}
@@ -282,7 +277,7 @@ const Inventario = () => {
                 okText="Si"
                 okType='danger'
                 onCancel={handleCancelDelete}
-            />
+            /> */}
         </div>
     );
 };
