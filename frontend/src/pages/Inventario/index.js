@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Typography } from 'antd';
+import { Table, Button, Modal, Form, Input, Typography, Space } from 'antd';
 import axios from 'axios';
 import { DeleteFilled, EditFilled, PlusOutlined } from '@ant-design/icons'
 
-const Pedidos = () => {
-    const apiUrl = 'https://dist-ropa-api.onrender.com/pedidos/';
+const Inventario = () => {
+    const apiUrl = 'https://dist-ropa-api.onrender.com/inventarios/';
     const [data, setData] = useState([]);
     const [selectedRow, setSelectedRow] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
@@ -12,6 +12,7 @@ const Pedidos = () => {
     const [createModalVisible, setCreateModalVisible] = useState(false);
     const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
     const [deletingRecord, setDeletingRecord] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     //peticion post
     const handleCreate = () => {
@@ -37,6 +38,8 @@ const Pedidos = () => {
 
     //peticion get
     useEffect(() => {
+        setLoading(true);
+
         axios.get(apiUrl)
             .then(response => {
                 setData(response.data);
@@ -44,6 +47,7 @@ const Pedidos = () => {
             .catch(error => {
                 console.error('Error al obtener los datos:', error);
             });
+        setLoading(false);
     }, []);
 
     //peticion put
@@ -53,10 +57,10 @@ const Pedidos = () => {
         setModalVisible(true);
     };
     const handleSave = (editedData) => {
-        axios.put(apiUrl + editedData.id_pedido, editedData)
+        axios.put(apiUrl + editedData.id_inventario, editedData)
             .then(() => {
                 const updatedData = data.map(item =>
-                    item.id_pedido === editedData.id_pedido ? editedData : item
+                    item.id_inventario === editedData.id_inventario ? editedData : item
                 );
                 setData(updatedData);
                 setModalVisible(false);
@@ -79,10 +83,10 @@ const Pedidos = () => {
 
         // Eliminar el registro
         if (deletingRecord) {
-            axios.delete(apiUrl + deletingRecord.id_pedido)
+            axios.delete(apiUrl + deletingRecord.id_inventario)
                 .then(() => {
                     // Actualizar la lista de datos después de eliminar el registro
-                    setData(data.filter(item => item.id_pedido !== deletingRecord.id_pedido));
+                    setData(data.filter(item => item.id_inventario !== deletingRecord.id_inventario));
                 })
                 .catch(error => {
                     console.error('Error al eliminar el registro:', error);
@@ -97,8 +101,12 @@ const Pedidos = () => {
 
     //columnas de la tabla
     const columns = [
-        { title: 'Factura', dataIndex: 'numero_factura', key: 'numero_factura', },
-        { title: 'Estado', dataIndex: 'estado', key: 'estado', },
+        { title: 'Fecha', dataIndex: 'fecha', key: 'fecha', },
+        { title: 'Inventario', dataIndex: 'id_producto', key: 'id_producto', },
+        { title: 'Sucursal', dataIndex: 'id_sucursal', key: 'id_sucursal', },
+        { title: 'Stock', dataIndex: 'stock', key: 'stock', },
+        { title: 'Precio Venta', dataIndex: 'precio_venta', key: 'precio_venta', },
+        { title: 'Precio Compra', dataIndex: 'precio_compra', key: 'precio_compra', },
         {
             title: 'Acciones',
             key: 'acciones',
@@ -121,7 +129,7 @@ const Pedidos = () => {
     return (
         <div className='div-table'>
             <div className='table-elemnts'>
-                <Typography style={{ fontSize: "25px" }}>Pedidos</Typography>
+                <Typography style={{ fontSize: "25px" }}>Inventario</Typography>
                 <Button
                     type="primary"
                     onClick={handleCreate}
@@ -133,12 +141,13 @@ const Pedidos = () => {
             <Table
                 dataSource={data}
                 columns={columns}
-                rowKey="id_pedido"
+                rowKey="id_inventario"
                 pagination={false}
+                loading={loading}
             />
 
             <Modal
-                title="Editar Pedido"
+                title="Editar Inventario"
                 open={modalVisible}
                 onOk={() => handleSave(selectedRow)}
                 onCancel={() => { setModalVisible(false); }}
@@ -149,18 +158,30 @@ const Pedidos = () => {
                     layout='vertical'
                     preserve={false}
                 >
-                    <Form.Item name="numero_factura" label="Factura" style={{ marginBottom: 10 }}>
-                        <Input value={selectedRow?.numero_factura} onChange={e => setSelectedRow({ ...selectedRow, numero_factura: e.target.value })} />
-                    </Form.Item>
+                    <Form.Item name='fecha' label="Rut" style={{ marginBottom: 10 }}>
+                        <Input value={selectedRow?.fecha} onChange={e => setSelectedRow({ ...selectedRow, fecha: e.target.value })} />
+                    </Form.Item >
 
-                    <Form.Item name="estado" label="Estado" style={{ marginBottom: 10, width: 224 }}>
-                        <Input value={selectedRow?.estado} onChange={e => setSelectedRow({ ...selectedRow, estado: e.target.value })} />
-                    </Form.Item>
+                    <Space size={'large'}>
+                        <Form.Item name="id_producto" label="Proveedor" style={{ marginBottom: 10, width: 300 }}>
+                            <Input value={selectedRow?.id_producto} onChange={e => setSelectedRow({ ...selectedRow, id_producto: e.target.value })} />
+                        </Form.Item>
+                        <Form.Item name="precio_venta" label="Precio Venta" style={{ marginBottom: 10 }}>
+                            <Input value={selectedRow?.precio_venta} onChange={e => setSelectedRow({ ...selectedRow, precio_venta: e.target.value })} />
+                        </Form.Item>
+                    </Space>
+
+                    <Space size={'large'}>
+
+                        <Form.Item name="stock" label="Stock" style={{ marginBottom: 10 }}>
+                            <Input value={selectedRow?.stock} onChange={e => setSelectedRow({ ...selectedRow, stock: e.target.value })} />
+                        </Form.Item>
+                    </Space>
                 </Form>
             </Modal>
 
             <Modal
-                title="Agregar Pedido"
+                title="Agregar Inventario"
                 open={createModalVisible}
                 onOk={handleCreateSubmit}
                 onCancel={() => {
@@ -169,32 +190,88 @@ const Pedidos = () => {
                 }}
             >
                 <Form form={createForm} requiredMark={false} layout='vertical'>
+                    <Space size={'large'}>
+
+                        <Form.Item
+                            name="id_sucursal"
+                            label="Sucursal"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                            style={{ marginBottom: 10, width: 300 }}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="fecha"
+                            label="Fecha"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                            style={{ marginBottom: 10 }}
+                        >
+                            <Input type='date' />
+                        </Form.Item>
+                    </Space>
+
                     <Form.Item
-                        name="numero_factura"
-                        label="Factura"
+                        name="id_producto"
+                        label="Producto"
                         rules={[
                             {
                                 required: true,
-                                message: 'Por favor ingresa el numero_factura del pedido',
+
                             },
                         ]}
-                        style={{ marginBottom: 10 }}
+                        style={{ marginBottom: 10, width: 300 }}
                     >
                         <Input />
                     </Form.Item>
 
-                    <Form.Item
-                        name="estado"
-                        label="Estado"
-                        rules={[
-                            {
-                                required: true,
-                            },
-                        ]}
-                        style={{ marginBottom: 10, width: 224 }}
-                    >
-                        <Input />
-                    </Form.Item>
+                    <Space size={'small'}>
+                        <Form.Item
+                            name="stock"
+                            label="Stock"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                            style={{ marginBottom: 10 }}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="precio_venta"
+                            label="Precio Venta"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                            style={{ marginBottom: 10 }}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="precio_compra"
+                            label="Precio Compra"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                            style={{ marginBottom: 10 }}
+                        >
+                            <Input />
+                        </Form.Item>
+                    </Space>
                 </Form>
             </Modal>
 
@@ -210,4 +287,4 @@ const Pedidos = () => {
     );
 };
 
-export default Pedidos;
+export default Inventario;

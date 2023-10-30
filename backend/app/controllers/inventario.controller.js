@@ -7,7 +7,7 @@ exports.create = (req, res) => {
     const inventario = {
         fecha: req.body.fecha,
         id_producto: req.body.id_producto,
-        id_sucursal: req.body.id_municipio,
+        id_sucursal: req.body.id_sucursal,
         stock: req.body.stock,
         precio_venta: req.body.precio_venta,
         precio_compra: req.body.precio_compra

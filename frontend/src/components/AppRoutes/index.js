@@ -9,6 +9,7 @@ import Pedidos from '../../pages/Pedidos'
 import Facturas from '../../pages/Facturas'
 import Sucursales from '../../pages/Sucursales'
 import Compras from '../../pages/Compras'
+import Inventario from '../../pages/Inventario'
 
 export default function AppRoutes() {
     return (
@@ -22,6 +23,7 @@ export default function AppRoutes() {
             <Route path='/facturas' element={<Facturas />}></Route>
             <Route path='/sucursales' element={<Sucursales />}></Route>
             <Route path='/compras' element={<Compras />}></Route>
+            <Route path='/inventario' element={<Inventario />}></Route>
         </Routes>
     )
 }

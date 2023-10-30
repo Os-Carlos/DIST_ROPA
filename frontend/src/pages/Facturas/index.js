@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input } from 'antd';
+import { Table, Button, Modal, Form, Input, Typography, Space } from 'antd';
 import axios from 'axios';
-// import { DeleteFilled, EditFilled, PlusOutlined } from '@ant-design/icons'
 import { PlusOutlined } from '@ant-design/icons'
-import Typography from 'antd/es/typography/Typography';
 
 const Facturas = () => {
-    const apiUrl = 'http://localhost:4000/facturas/';
+    const apiUrl = 'https://dist-ropa-api.onrender.com/facturas/';
     const [data, setData] = useState([]);
     // const [selectedRow, setSelectedRow] = useState(null);
     // const [modalVisible, setModalVisible] = useState(false);
@@ -50,18 +48,20 @@ const Facturas = () => {
 
     // //peticion put
     // const handleEdit = (record) => {
+
     //     setSelectedRow(record);
     //     setModalVisible(true);
     // };
     // const handleSave = (editedData) => {
-    //     axios.put(apiUrl + editedData.Facturas, editedData)
+    //     axios.put(apiUrl + editedData.id_factura, editedData)
     //         .then(() => {
     //             const updatedData = data.map(item =>
-    //                 item.Facturas === editedData.Facturas ? editedData : item
+    //                 item.id_factura === editedData.id_factura ? editedData : item
     //             );
     //             setData(updatedData);
     //             setModalVisible(false);
     //             setSelectedRow(null);
+
     //         })
     //         .catch(error => {
     //             console.error('Error al guardar los cambios:', error);
@@ -79,10 +79,10 @@ const Facturas = () => {
 
     //     // Eliminar el registro
     //     if (deletingRecord) {
-    //         axios.delete(apiUrl + deletingRecord.Facturas)
+    //         axios.delete(apiUrl + deletingRecord.id_factura)
     //             .then(() => {
     //                 // Actualizar la lista de datos después de eliminar el registro
-    //                 setData(data.filter(item => item.Facturas !== deletingRecord.Facturas));
+    //                 setData(data.filter(item => item.id_factura !== deletingRecord.id_factura));
     //             })
     //             .catch(error => {
     //                 console.error('Error al eliminar el registro:', error);
@@ -97,11 +97,10 @@ const Facturas = () => {
 
     //columnas de la tabla
     const columns = [
-        // { title: 'ID Pedido', dataIndex: 'Facturas', key: 'Facturas', },
         { title: 'Numero Factura', dataIndex: 'numero_factura', key: 'numero_factura', },
-        { title: 'ID Cliente', dataIndex: 'id_cliente', key: 'id_cliente', },
-        { title: 'ID Empleado', dataIndex: 'id_empleado', key: 'id_empleado', },
-        { title: 'Fecha', dataIndex: 'fecha_hora', key: 'fecha_hora', },
+        { title: 'Factura', dataIndex: 'id_factura', key: 'id_factura', },
+        { title: 'Empleado', dataIndex: 'id_empleado', key: 'id_empleado', },
+        { title: 'Fecha', dataIndex: 'fecha', key: 'fecha', },
         { title: 'Total', dataIndex: 'total', key: 'total', },
         // {
         //     title: 'Acciones',
@@ -109,7 +108,7 @@ const Facturas = () => {
         //     render: (record) => (
         //         <div>
         //             <EditFilled
-        //                 onClick={() => handleEdit(record)}
+        //                 onClick={() => { handleEdit(record) }}
         //                 style={{ fontSize: "20px", color: "#e67700" }}
         //             />
         //             <DeleteFilled
@@ -126,7 +125,13 @@ const Facturas = () => {
         <div className='div-table'>
             <div className='table-elemnts'>
                 <Typography style={{ fontSize: "25px" }}>Facturas</Typography>
-                <Button type="primary" onClick={handleCreate} style={{ paddingTop: 5 }}><PlusOutlined style={{ fontSize: "20px", margin: 0 }} /></Button>
+                <Button
+                    type="primary"
+                    onClick={handleCreate}
+                    style={{ paddingTop: 5 }}
+                >
+                    <PlusOutlined style={{ fontSize: "20px", margin: 0 }} />
+                </Button>
             </div>
             <Table
                 dataSource={data}
@@ -139,14 +144,34 @@ const Facturas = () => {
                 title="Editar Factura"
                 open={modalVisible}
                 onOk={() => handleSave(selectedRow)}
-                onCancel={() => setModalVisible(false)}
+                onCancel={() => { setModalVisible(false); }}
+                destroyOnClose
             >
-                <Form initialValues={selectedRow}>
-                    <Form.Item name="numero_factura" label="Numero Factura">
-                        <Input value={selectedRow?.numero_factura} onChange={e => setSelectedRow({ ...selectedRow, numero_factura: e.target.value })} />
-                    </Form.Item>
-                    <Form.Item name="id_cliente" label="ID Cliente">
-                        <Input value={selectedRow?.id_cliente} onChange={e => setSelectedRow({ ...selectedRow, id_cliente: e.target.value })} />
+                <Form
+                    initialValues={selectedRow}
+                    layout='vertical'
+                    preserve={false}
+                >
+                    <Space size={'large'}>
+                        <Form.Item name="id_factura" label="Factura" style={{ marginBottom: 10, width: 300 }}>
+                            <Input value={selectedRow?.id_factura} onChange={e => setSelectedRow({ ...selectedRow, id_factura: e.target.value })} />
+                        </Form.Item>
+                        <Form.Item name='numero_factura' label="Rut" style={{ marginBottom: 10 }}>
+                            <Input value={selectedRow?.numero_factura} onChange={e => setSelectedRow({ ...selectedRow, numero_factura: e.target.value })} />
+                        </Form.Item >
+                    </Space>
+
+                    <Space size={'large'}>
+                        <Form.Item name="id_empleado" label="Empleado" style={{ marginBottom: 10, width: 300 }}>
+                            <Input value={selectedRow?.id_empleado} onChange={e => setSelectedRow({ ...selectedRow, id_empleado: e.target.value })} />
+                        </Form.Item>
+                        <Form.Item name="fecha" label="Fecha" style={{ marginBottom: 10 }}>
+                            <Input value={selectedRow?.fecha} onChange={e => setSelectedRow({ ...selectedRow, fecha: e.target.value })} />
+                        </Form.Item>
+                    </Space>
+
+                    <Form.Item name="total" label="Total" style={{ marginBottom: 10 }}>
+                        <Input value={selectedRow?.total} onChange={e => setSelectedRow({ ...selectedRow, total: e.target.value })} />
                     </Form.Item>
                 </Form>
             </Modal> */}
@@ -160,66 +185,51 @@ const Facturas = () => {
                     setCreateModalVisible(false);
                 }}
             >
-                <Form form={createForm} layout='vertical'>
+                <Form form={createForm} requiredMark={false} layout='vertical'>
                     <Form.Item
                         name="numero_factura"
                         label="Numero Factura"
                         rules={[
                             {
                                 required: true,
-                                message: 'Por favor ingresa el numero de factura',
+
                             },
                         ]}
+                        style={{ marginBottom: 10 }}
                     >
                         <Input />
                     </Form.Item>
-                    <Form.Item
-                        name="id_cliente"
-                        label="ID Cliente"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Por favor ingresa el id del cliente',
-                            },
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        name="id_empleado"
-                        label="ID Empleado"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Por favor ingresa el id del empleado',
-                            },
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    {/* <Form.Item
-                        name="fecha_hora"
-                        label="Fecha"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Por favor ingresa la fecha',
-                            },
-                        ]}
-                    >
-                        <Input type='date' />
-                    </Form.Item>
-                    <Form.Item
-                        name="total"
-                        label="Total"
-                        rules={[
-                            {
-                                required: true
-                            },
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item> */}
+                    <Space size={'large'}>
+                        <Form.Item
+                            name="id_cliente"
+                            label="Factura"
+                            rules={[
+                                {
+                                    required: true,
+
+                                },
+                            ]}
+                            style={{ marginBottom: 10, width: 224 }}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="id_empleado"
+                            label="Empleado"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                            style={{ marginBottom: 10, width: 224 }}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                    </Space>
+
+
                 </Form>
             </Modal>
 
